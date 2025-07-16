@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pilihan Ada di Tanganmu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      width: 45%;
+      background: white;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+
+    .image {
+      width: 100%;
+      max-height: 250px;
+      object-fit: contain;
+      display: none;
+      margin-top: 15px;
+      border-radius: 8px;
+    }
+
+    button {
+      background: #ffcc00;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-top: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    input[type="number"] {
+      width: 60px;
+      padding: 5px;
+      margin-top: 10px;
+    }
+
+    #bar-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 30px auto;
+      background-color: #ddd;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 30px;
+      display: flex;
+    }
+
+    .bar1 {
+      background-color: #4caf50;
+      height: 100%;
+      transition: width 0.5s;
+      color: white;
+      text-align: center;
+      line-height: 30px;
+    }
+
+    .bar2 {
+      background-color: #f44336;
+      height: 100%;
+      transition: width 0.5s;
+      color: white;
+      text-align: center;
+      line-height: 30px;
+    }
+
+    #result {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    #waBtn {
+      margin-top: 20px;
+      background-color: #25D366;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Pilihan ada di tanganmu</h1>
+
+  <div class="container">
+    <div class="card" id="leftCard">
+      <button onclick="showImage('left')">Klik</button>
+      <img id="leftImg" class="image" src="img/rangga.jpeg" alt="Foto 1">
+      <div>
+        <label>Persen:</label>
+        <input type="number" id="percent1" min="0" max="100" placeholder="0">%
+      </div>
+    </div>
+
+    <div class="card" id="rightCard">
+      <button onclick="showImage('right')">Klik</button>
+      <img id="rightImg" class="image" src="img/jaehyun.jpeg" alt="Foto 2">
+      <div>
+        <label>Persen:</label>
+        <input type="number" id="percent2" min="0" max="100" placeholder="0">%
+      </div>
+    </div>
+  </div>
+
+  <div id="bar-container">
+    <div class="bar1" id="bar1" style="width: 0%">0%</div>
+    <div class="bar2" id="bar2" style="width: 0%">0%</div>
+  </div>
+
+  <button onclick="hitungHasil()">Hitung Hasil</button>
+
+  <div id="result"></div>
+
+  <button id="waBtn" onclick="kirimWhatsApp()">Kirim Hasil ke WhatsApp</button>
+
+  <script>
+    let hasilAkhir = "";
+
+    function showImage(side) {
+      if (side === 'left') {
+        document.getElementById('leftImg').style.display = 'block';
+      } else {
+        document.getElementById('rightImg').style.display = 'block';
+      }
+    }
+
+    function hitungHasil() {
+      const p1 = parseInt(document.getElementById('percent1').value) || 0;
+      const p2 = parseInt(document.getElementById('percent2').value) || 0;
+      const total = p1 + p2;
+
+      // Hitung lebar bar berdasarkan total
+      const percent1 = total ? (p1 / total) * 100 : 0;
+      const percent2 = total ? (p2 / total) * 100 : 0;
+
+      document.getElementById('bar1').style.width = percent1 + "%";
+      document.getElementById('bar2').style.width = percent2 + "%";
+
+      document.getElementById('bar1').innerText = Math.round(percent1) + "%";
+      document.getElementById('bar2').innerText = Math.round(percent2) + "%";
+
+      let resultText = "";
+      if (p1 === p2) {
+        resultText = "Hasil Imbang!";
+      } else if (p1 > p2) {
+        resultText = "Foto 1 lebih banyak dipilih!";
+      } else {
+        resultText = "Foto 2 lebih banyak dipilih!";
+      }
+
+      hasilAkhir = `${resultText} (Foto 1: ${p1}%, Foto 2: ${p2}%)`;
+      document.getElementById('result').innerText = resultText;
+    }
+
+    function kirimWhatsApp() {
+      if (hasilAkhir === "") {
+        alert("Silakan hitung hasil dulu!");
+        return;
+      }
+      const nomor = "62881022057671";
+      const pesan = encodeURIComponent(`Halo, hasil pilihan saya adalah:\n${hasilAkhir}`);
+      const link = `https://wa.me/${nomor}?text=${pesan}`;
+      window.open(link, "_blank");
+    }
+  </script>
+
+</body>
+</html>
